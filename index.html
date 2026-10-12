@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="login-screen" id="loginScreen">
+      <div class="login-left">
+        <div class="brand-tag">LMS</div>
+        <h1>Manage your library smarter.</h1>
+        <p>
+          Track books, monitor loans, and support members with a clean and efficient
+          library dashboard.
+        </p>
+        <ul>
+          <li>Book lending overview</li>
+          <li>Member activity tracking</li>
+          <li>Daily library insights</li>
+        </ul>
+      </div>
+
+      <div class="login-card">
+        <div class="login-header">
+          <span class="badge">Admin Access</span>
+          <h2>Welcome Back</h2>
+        </div>
+
+        <form id="loginForm">
+          <label for="email">Email Address</label>
+          <input id="email" type="email" placeholder="admin@library.com" required />
+
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="••••••••" required />
+
+          <div class="remember-row">
+            <label class="check-wrap">
+              <input type="checkbox" />
+              <span>Remember me</span>
+            </label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="primary-btn">Login to Dashboard</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="app-shell hidden" id="appShell">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-btn" id="menuToggle" aria-label="Toggle sidebar">☰</button>
+          <div class="brand-box">
+            <span class="brand-icon">L</span>
+            <div>
+              <h3>Library</h3>
+              <small>Management System</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="search-box">
+            <span>⌕</span>
+            <input type="text" placeholder="Search" />
+          </div>
+          <div class="notification-wrap">
+            <button class="icon-button notification-button" id="notificationsButton" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPopover">
+              <span aria-hidden="true">🔔</span>
+              <span class="notification-count hidden" id="notificationCount">0</span>
+            </button>
+            <section class="notification-popover" id="notificationPopover" aria-label="Notifications" hidden>
+              <div class="notification-header">
+                <h2>Notifications</h2>
+                <button class="text-button" id="markNotificationsRead" type="button">Mark all read</button>
+              </div>
+              <ul class="notification-list" id="notificationList"></ul>
+            </section>
+          </div>
+          <button class="icon-button theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode">☾</button>
+          <button class="user-pill" id="profileShortcut" type="button" data-page="profileView" aria-label="Open profile">
+            <span class="avatar" id="profileAvatar">JD</span>
+            <span class="user-details">
+              <strong id="topbarProfileName">John Doe</strong>
+              <small id="topbarProfileRole">Administrator</small>
+            </span>
+          </button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar" id="sidebar">
+          <nav>
+            <a class="nav-item active" href="#" data-page="dashboardView">
+              <span>🏠</span>
+              Dashboard
+            </a>
+            <a class="nav-item" href="#" data-page="booksView">
+              <span>📚</span>
+              Books
+            </a>
+            <a class="nav-item" href="#" data-page="membersView">
+              <span>👥</span>
+              Members
+            </a>
+            <a class="nav-item" href="#" data-page="loansView">
+              <span>📝</span>
+              Loans
+            </a>
+            <a class="nav-item" href="#" data-page="profileView">
+              <span>👤</span>
+              Profile
+            </a>
+          </nav>
+
+          <div class="sidebar-card">
+            <p>Overdue books</p>
+            <h3 id="overdueSidebarStat">0</h3>
+            <span>Need a return</span>
+          </div>
+        </aside>
+
+        <main class="content">
+          <div class="page-view" id="dashboardView">
+          <section class="page-head">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h1>Dashboard</h1>
+            </div>
+            <button class="primary-btn" id="logoutBtn">Logout</button>
+          </section>
+
+          <section class="stats-grid dashboard-stats">
+            <article class="stat-card accent-blue">
+              <div class="stat-top">
+                <span>Total Books</span>
+              </div>
+              <h2 id="totalBooksStat">0</h2>
+              <small>Copies in the catalog</small>
+            </article>
+
+            <article class="stat-card accent-green">
+              <div class="stat-top">
+                <span>Available Books</span>
+              </div>
+              <h2 id="availableBooksStat">0</h2>
+              <small>Ready to issue</small>
+            </article>
+
+            <article class="stat-card accent-yellow">
+              <div class="stat-top">
+                <span>Issued Books</span>
+              </div>
+              <h2 id="issuedBooksStat">0</h2>
+              <small>Currently on loan</small>
+            </article>
+
+            <article class="stat-card accent-purple">
+              <div class="stat-top">
+                <span>Total Members</span>
+              </div>
+              <h2 id="totalMembersStat">0</h2>
+              <small>Registered members</small>
+            </article>
+
+            <article class="stat-card accent-red">
+              <div class="stat-top">
+                <span>Overdue Books</span>
+              </div>
+              <h2 id="overdueBooksStat">0</h2>
+              <small>Past their due date</small>
+            </article>
+          </section>
+
+          <section class="panel-grid">
+            <article class="panel card">
+              <div class="panel-header">
+                <h3>Recently Added Books</h3>
+                <a href="#" data-page="booksView">View all</a>
+              </div>
+              <ul class="book-list" id="recentBooksList">
+                <li class="empty-list">No books have been added yet.</li>
+              </ul>
+            </article>
+
+            <article class="panel card">
+              <div class="panel-header">
+                <h3>Overdue Loans</h3>
+                <a href="#" data-page="loansView">View all</a>
+              </div>
+              <ul class="activity-list" id="overdueSummaryList">
+                <li class="empty-list">No overdue books.</li>
+              </ul>
+            </article>
+          </section>
+
+          <section class="table-card card">
+            <div class="panel-header">
+              <h3>Recently Issued</h3>
+              <a href="#" data-page="loansView">Manage loans</a>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Book</th>
+                  <th>Issued</th>
+                  <th>Due Date</th>
+                  <th>Fine</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardLoansBody"></tbody>
+            </table>
+          </section>
+          </div>
+
+          <section class="page-view hidden" id="booksView">
+            <section class="page-head">
+              <div>
+                <p class="eyebrow">Inventory</p>
+                <h1>Books</h1>
+              </div>
+              <button class="primary-btn" type="button" data-add="book">+ Add book</button>
+            </section>
+
+            <section class="management-toolbar" aria-label="Search and filter books">
+              <label class="management-search">
+                <span>Search books</span>
+                <input id="bookSearch" type="search" placeholder="Title, author, ISBN..." />
+              </label>
+              <label>
+                <span>Category</span>
+                <select id="bookCategoryFilter"><option value="">All categories</option></select>
+              </label>
+              <label>
+                <span>Availability</span>
+                <select id="bookAvailabilityFilter">
+                  <option value="">All books</option>
+                  <option value="available">Available</option>
+                  <option value="unavailable">Unavailable</option>
+                </select>
+              </label>
+              <label>
+                <span>Sort by</span>
+                <select id="bookSort">
+                  <option value="recent">Recently added</option>
+                  <option value="title">Title, A to Z</option>
+                  <option value="author">Author, A to Z</option>
+                  <option value="category">Category, A to Z</option>
+                  <option value="year">Newest publication</option>
+                </select>
+              </label>
+            </section>
+
+            <section class="table-card card management-table">
+              <div class="panel-header">
+                <h3>Book collection</h3>
+                <span class="result-count" id="bookResultCount">0 books</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr><th>Title</th><th>Author</th><th>ISBN</th><th>Category</th><th>Year</th><th>Available / Total</th><th>Actions</th></tr>
+                  </thead>
+                  <tbody id="booksTableBody"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="page-view hidden" id="membersView">
+            <section class="page-head">
+              <div>
+                <p class="eyebrow">Directory</p>
+                <h1>Members</h1>
+              </div>
+              <button class="primary-btn" type="button" data-add="member">+ Add member</button>
+            </section>
+
+            <section class="management-toolbar member-toolbar" aria-label="Search members">
+              <label class="management-search">
+                <span>Search members</span>
+                <input id="memberSearch" type="search" placeholder="Name, email, phone..." />
+              </label>
+            </section>
+
+            <section class="table-card card management-table member-table">
+              <div class="panel-header">
+                <h3>Member directory</h3>
+                <span class="result-count" id="memberResultCount">0 members</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Books on loan</th><th>Actions</th></tr>
+                  </thead>
+                  <tbody id="membersTableBody"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="page-view hidden" id="loansView">
+            <section class="page-head">
+              <div>
+                <p class="eyebrow">Circulation</p>
+                <h1>Issued Books</h1>
+              </div>
+              <button class="primary-btn" type="button" data-page="booksView">Issue a book</button>
+            </section>
+
+            <section class="management-toolbar loan-toolbar" aria-label="Search and filter loans">
+              <label class="management-search">
+                <span>Search loans</span>
+                <input id="loanSearch" type="search" placeholder="Book, member, email..." />
+              </label>
+              <label>
+                <span>Loan status</span>
+                <select id="loanStatusFilter">
+                  <option value="active">Active loans</option>
+                  <option value="returned">Borrowing history</option>
+                  <option value="all">All records</option>
+                </select>
+              </label>
+              <p class="loan-policy">14-day loan period · $1 fine per overdue day</p>
+            </section>
+
+            <section class="table-card card management-table loan-table">
+              <div class="panel-header">
+                <h3>Loan register</h3>
+                <span class="result-count" id="loanResultCount">0 loans</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr><th>Book</th><th>Member</th><th>Issued</th><th>Due</th><th>Returned</th><th>Late days</th><th>Fine</th><th>Status</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="loansTableBody"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="page-view hidden" id="profileView">
+            <section class="page-head">
+              <div>
+                <p class="eyebrow">Account</p>
+                <h1>Profile</h1>
+              </div>
+            </section>
+
+            <section class="profile-panel card">
+              <div class="profile-heading">
+                <span class="avatar profile-avatar-large" id="profilePageAvatar">JD</span>
+                <div>
+                  <h2 id="profilePageName">John Doe</h2>
+                  <p id="profilePageRole">Administrator</p>
+                </div>
+              </div>
+              <form id="profileForm">
+                <div class="profile-fields">
+                  <label class="form-field">
+                    <span>Full name</span>
+                    <input id="profileName" name="name" type="text" required maxlength="80" />
+                  </label>
+                  <label class="form-field">
+                    <span>Email address</span>
+                    <input id="profileEmail" name="email" type="email" required maxlength="120" />
+                  </label>
+                  <label class="form-field">
+                    <span>Phone number</span>
+                    <input id="profilePhone" name="phone" type="tel" maxlength="32" />
+                  </label>
+                  <label class="form-field">
+                    <span>Role</span>
+                    <input id="profileRole" name="role" type="text" value="Administrator" disabled />
+                  </label>
+                </div>
+                <div class="profile-actions">
+                  <p class="profile-save-status" id="profileSaveStatus" role="status"></p>
+                  <button class="primary-btn" type="submit">Save profile</button>
+                </div>
+              </form>
+            </section>
+          </section>
+        </main>
+      </div>
+    </div>
+    <dialog class="record-dialog" id="recordDialog" aria-labelledby="recordDialogTitle">
+      <form id="recordForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow" id="recordDialogType">Library record</p>
+            <h2 id="recordDialogTitle">Add record</h2>
+          </div>
+          <button class="dialog-close" type="button" id="closeRecordDialog" aria-label="Close">×</button>
+        </div>
+        <div class="dialog-fields" id="recordDialogFields"></div>
+        <div class="dialog-actions">
+          <button class="secondary-btn" type="button" id="cancelRecordDialog">Cancel</button>
+          <button class="primary-btn" type="submit" id="saveRecordButton">Save record</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog class="record-dialog issue-dialog" id="issueDialog" aria-labelledby="issueDialogTitle">
+      <form id="issueForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">New loan</p>
+            <h2 id="issueDialogTitle">Issue book</h2>
+          </div>
+          <button class="dialog-close" type="button" id="closeIssueDialog" aria-label="Close">×</button>
+        </div>
+        <div class="dialog-fields issue-fields">
+          <label class="form-field">
+            <span>Book</span>
+            <select id="issueBook" name="bookId" required></select>
+          </label>
+          <label class="form-field">
+            <span>Member</span>
+            <select id="issueMember" name="memberId" required></select>
+          </label>
+          <label class="form-field">
+            <span>Issue date</span>
+            <input id="issueDate" name="issuedAt" type="date" required />
+          </label>
+        </div>
+        <p class="issue-due-preview">Due date <strong id="issueDueDate"></strong></p>
+        <p class="loan-policy">14-day loan period · $1 fine per overdue day</p>
+        <div class="dialog-actions">
+          <button class="secondary-btn" type="button" id="cancelIssueDialog">Cancel</button>
+          <button class="primary-btn" type="submit">Confirm issue</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>
